@@ -16,14 +16,14 @@ app.use(requestLogger);
 
 morgan.token("person", (request, response) => {
   const body = request.body;
-  if(body){
+  if (body) {
     return JSON.stringify(body);
-  }else {
+  } else {
     return "";
   }
-})
+});
 
-app.use(morgan(':method :url :response-time :person'));
+app.use(morgan(":method :url :response-time :person"));
 
 let persons = [
   {
@@ -122,8 +122,6 @@ const generateRandomId = () => {
     }
   }
 };
-
-
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });
