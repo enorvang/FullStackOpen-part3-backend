@@ -1,5 +1,6 @@
-import express, { response } from "express";
+import express from "express";
 const app = express();
+app.use(express.json());
 
 let persons = [
   {
@@ -56,6 +57,37 @@ app.delete("/api/persons/:id", (req, res) => {
   persons = persons.filter((person) => person.id !== id);
   res.status(204).end();
 });
+
+app.post("/api/persons/", (req, res) => {
+  const body = req.body;
+  if (!body.name) {
+    return res.status(400).json({
+      error: "name missing",
+    });
+  }
+
+  const person = {
+    id: generateRandomId(),
+    name: body.name,
+    number: body.number,
+    
+  };
+  persons = persons.concat(person);
+  res.json(person);
+});
+
+const generateRandomId = () => {
+  const MAX_IDS = 1_000_000;
+  const id = Math.floor(Math.random() * MAX_IDS);
+  while (true) {
+    const person = persons.find((person) => person.id === id);
+    if (!person) {
+      return id;
+    } else {
+      id = Math.floor(Math.random() * 1_000_000);
+    }
+  }
+};
 
 const PORT = 3001;
 app.listen(PORT, () => {
