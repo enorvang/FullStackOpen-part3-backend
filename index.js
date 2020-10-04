@@ -7,14 +7,23 @@ app.use(express.json());
 const requestLogger = (request, response, next) => {
   console.log(`Method: ${request.method}`);
   console.log(`Path: ${request.path}`);
-  console.log(`Body: ${request.body}`);
+  console.log(`Body: ${JSON.stringify(request.body)}`);
   console.log(`---`);
   next();
 };
 
 app.use(requestLogger);
 
-app.use(morgan('tiny'));
+morgan.token("person", (request, response) => {
+  const body = request.body;
+  if(body){
+    return JSON.stringify(body);
+  }else {
+    return "";
+  }
+})
+
+app.use(morgan(':method :url :response-time :person'));
 
 let persons = [
   {
