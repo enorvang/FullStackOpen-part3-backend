@@ -1,6 +1,8 @@
 import express from "express";
+import morgan from "morgan";
 const app = express();
 app.use(express.json());
+app.use(requestLogger);
 
 let persons = [
   {
@@ -66,23 +68,22 @@ app.post("/api/persons/", (req, res) => {
     });
   }
 
-  if(!body.number) {
+  if (!body.number) {
     return res.status(400).json({
       error: "number missing",
-    })
+    });
   }
 
-  if(persons.find((person)=>person.name === body.name)){
+  if (persons.find((person) => person.name === body.name)) {
     return res.status(400).json({
-      error: "name already exists"
-    })
+      error: "name already exists",
+    });
   }
 
   const person = {
     id: generateRandomId(),
     name: body.name,
     number: body.number,
-    
   };
   persons = persons.concat(person);
   res.json(person);
@@ -100,6 +101,19 @@ const generateRandomId = () => {
     }
   }
 };
+
+const requestLogger = (request, response, next) => {
+  console.log(`Method: ${request.method}`);
+  console.log(`Path: ${request.path}`);
+  console.log(`Body: ${request.body}`);
+  console.log(`---`);
+  next();
+};
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+app.use(unknownEndpoint);
 
 const PORT = 3001;
 app.listen(PORT, () => {
