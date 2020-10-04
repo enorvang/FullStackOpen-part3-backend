@@ -6,7 +6,11 @@
   "scripts": {
     "start": "node -r esm index.js",
     "dev": "nodemon -r esm index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:ui": "rm -rf build && cd ../FullstackOpen/part2/phonebook && npm run build --prod && cp -r build ../../../FullStackOpen-part3-backend/",
+    "deploy": "git push heroku master",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",    
+    "logs:prod": "heroku logs --tail"
   },
   "repository": {
     "type": "git",
