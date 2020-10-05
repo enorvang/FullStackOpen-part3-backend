@@ -5,7 +5,6 @@ if (process.argv.length < 3) {
     "Please provide the password as an argument: node mongo.js <password> "
   );
 }
-
 const password = process.argv[2];
 const dbname = "phonebook-app";
 
